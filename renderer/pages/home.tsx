@@ -21,7 +21,30 @@ import CardBody from '../components/Card/CardBody';
 import TablesTableRow from '../components/Tables/TablesTableRow';
 import { tablesTableData } from '../variables/general';
 
+const pusher = new Pusher('98548e046f30ae61931d', {
+	cluster: 'eu',
+});
+
+const channel = pusher.subscribe('pizza-jungle');
+
+interface Order {
+  name,
+  item,
+  status,
+  time
+}
+
 function Tables() {
+  const [orders, setOrders] = React.useState([{
+    name: '',
+    item: '',
+    status: '',
+    time: ''
+  }]);
+
+  channel.bind('new-order', order => {
+		setOrders(order);
+	});
 	const textColor = useColorModeValue('gray.700', 'white');
 
 	return (
@@ -47,15 +70,13 @@ function Tables() {
 							</Tr>
 						</Thead>
 						<Tbody>
-							{tablesTableData.map((row) => {
+							{orders.map((row) => {
 								return (
 									<TablesTableRow
 										name={row.name}
-										email={row.email}
-										subdomain={row.subdomain}
-										domain={row.domain}
+										item={row.item}
 										status={row.status}
-										date={row.date}
+										time={row.time}
 									/>
 								);
 							})}
