@@ -21,7 +21,7 @@ import CardBody from '../components/Card/CardBody';
 import TablesTableRow from '../components/Tables/TablesTableRow';
 import { tablesTableData } from '../variables/general';
 
-const pusher = new Pusher('98548e046f30ae61931d', {
+const pusher = new Pusher('fb2d17544b3e7440c96f', {
 	cluster: 'eu',
 });
 
@@ -35,16 +35,24 @@ interface Order {
 }
 
 function Tables() {
-  const [orders, setOrders] = React.useState([{
-    name: '',
-    item: '',
-    status: '',
-    time: ''
-  }]);
+	let newOrder = '';
+	console.log(`1: ${newOrder}`)
+	const [orders, setOrders] = React.useState([]);
+	
+	React.useEffect(() => {
+		channel.bind('new-order', (order) => {
+			newOrder = order;
+			setOrders((orders) => [...orders, order]);
+			console.log(`2: ${newOrder}`);
+			// console.log(newOrders);
+			// }
+		});
+	},[]);
 
-  channel.bind('new-order', order => {
-		setOrders(order);
-	});
+	
+	console.log(`3: ${newOrder}`);
+	
+	
 	const textColor = useColorModeValue('gray.700', 'white');
 
 	return (
@@ -78,6 +86,15 @@ function Tables() {
 										status={row.status}
 										time={row.time}
 									/>
+									// <TablesTableRow
+									// 	name={row.name}
+									// 	// logo={row.logo}
+									// 	email={row.email}
+									// 	subdomain={row.subdomain}
+									// 	domain={row.domain}
+									// 	status={row.status}
+									// 	date={row.date}
+									// />
 								);
 							})}
 						</Tbody>
