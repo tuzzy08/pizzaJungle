@@ -18,7 +18,7 @@ import {
 import Card from '../components/Card/Card';
 import CardHeader from '../components/Card/CardHeader';
 import CardBody from '../components/Card/CardBody';
-import TablesTableRow from '../components/Tables/TablesTableRow';
+import TablesOrderRow from '../components/Tables/TablesOrderRow';
 import { tablesTableData } from '../variables/general';
 
 const pusher = new Pusher('fb2d17544b3e7440c96f', {
@@ -28,30 +28,20 @@ const pusher = new Pusher('fb2d17544b3e7440c96f', {
 const channel = pusher.subscribe('pizza-jungle');
 
 interface Order {
-  name,
-  item,
-  status,
-  time
+	orderno: string;
+	name: string;
+	item: string;
+	status: string;
+	time: string;
 }
 
 function Tables() {
-	let newOrder = '';
-	console.log(`1: ${newOrder}`)
 	const [orders, setOrders] = React.useState([]);
 	
 	React.useEffect(() => {
 		channel.bind('new-order', (order) => {
-			newOrder = order;
-			setOrders((orders) => [...orders, order]);
-			console.log(`2: ${newOrder}`);
-			// console.log(newOrders);
-			// }
-		});
-	},[]);
-
-	
-	console.log(`3: ${newOrder}`);
-	
+			setOrders((orders) => [...orders, order]);});
+	}, []);
 	
 	const textColor = useColorModeValue('gray.700', 'white');
 
@@ -68,33 +58,30 @@ function Tables() {
 					<Table variant='simple' color={textColor}>
 						<Thead>
 							<Tr my='.8rem' pl='0px' color='gray.400'>
-								<Th pl='0px' color='gray.400'>
-									Customer
+								<Th fontSize='20px' color='gray.400'>
+									Order no
 								</Th>
-								<Th color='gray.400'>Order item</Th>
-								<Th color='gray.400'>Status</Th>
-								<Th color='gray.400'>Remaining Time</Th>
+								<Th fontSize='20px' pl='0px' color='gray.400'>
+									Name
+								</Th>
+								<Th fontSize='20px' color='gray.400'>
+									Status
+								</Th>
+								<Th fontSize='20px' color='gray.400'>
+									Ready In
+								</Th>
 								<Th></Th>
 							</Tr>
 						</Thead>
 						<Tbody>
 							{orders.map((row) => {
 								return (
-									<TablesTableRow
+									<TablesOrderRow
+										orderno={row.orderno}
 										name={row.name}
-										item={row.item}
 										status={row.status}
 										time={row.time}
 									/>
-									// <TablesTableRow
-									// 	name={row.name}
-									// 	// logo={row.logo}
-									// 	email={row.email}
-									// 	subdomain={row.subdomain}
-									// 	domain={row.domain}
-									// 	status={row.status}
-									// 	date={row.date}
-									// />
 								);
 							})}
 						</Tbody>
