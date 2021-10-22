@@ -80,7 +80,6 @@ function Tables() {
 										orderno={row.orderno}
 										name={row.name}
 										status={row.status}
-										time={row.time}
 									/>
 								);
 							})}

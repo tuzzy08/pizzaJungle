@@ -16,6 +16,9 @@ if (isProd) {
   const mainWindow = createWindow('main', {
     width: 1000,
     height: 600,
+    frame: false,
+    fullscreen: true,
+    fullscreenable: true,
   });
 
   if (isProd) {

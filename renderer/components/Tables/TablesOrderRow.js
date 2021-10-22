@@ -10,6 +10,8 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
+import CountdownTimer from '../CountdownTimer/CountdownTimer';
+
 function TablesOrderRow(props) {
 	const { orderno, name, status, time } = props;
 	const textColor = useColorModeValue('gray.700', 'white');
@@ -53,10 +55,11 @@ function TablesOrderRow(props) {
 				</Badge>
 			</Td>
 			<Td>
-				<Text fontSize='md' color={textColor} fontWeight='bold' pb='.5rem'>
+				<CountdownTimer />
+				{/* <Text fontSize='md' color={textColor} fontWeight='bold' pb='.5rem'>
 					{time}
-					{` mins`}
-				</Text>
+					mins
+				</Text> */}
 			</Td>
 		</Tr>
 	);
