@@ -6,15 +6,13 @@ import useInterval from '../../utils/useInterval';
 function CountdownTimer() {
   const textColor = useColorModeValue('gray.700', 'white');
 
-  const [remainingTime, setremainingTime] = useState(60);
+  const [remainingTime, setremainingTime] = useState(120);
 
   useInterval(() => {
     if (remainingTime > 0) {
       setremainingTime(remainingTime - 1);
     }    
   }, 1000)
-  
-  console.log(remainingTime)
 
   // Function to update the time every second
   // function updateTime() {

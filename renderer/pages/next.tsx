@@ -9,12 +9,12 @@ function Next() {
         <title>Next - Nextron (with-typescript)</title>
       </Head>
       <div>
-        <p>
+        {/* <p> */}
           ⚡ Electron + Next.js ⚡ -
           <Link href="/home">
             <a>Go to home page</a>
           </Link>
-        </p>
+        {/* </p> */}
       </div>
     </React.Fragment>
   );

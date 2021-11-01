@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Pusher from 'pusher-js';
 // Chakra imports
 import {
@@ -12,84 +12,51 @@ import {
 	Thead,
 	Tr,
   useColorModeValue,
-  Container,
 } from '@chakra-ui/react';
-// Custom components
-import Card from '../components/Card/Card';
-import CardHeader from '../components/Card/CardHeader';
-import CardBody from '../components/Card/CardBody';
-import TablesOrderRow from '../components/Tables/TablesOrderRow';
-import { tablesTableData } from '../variables/general';
+import OrderTable from '../components/Tables/OrderTable'
+import { OvenContext } from '../contexts/OvenContext';
 
-const pusher = new Pusher('fb2d17544b3e7440c96f', {
-	cluster: 'eu',
-});
 
-const channel = pusher.subscribe('pizza-jungle');
+function Home() {
+	// const [orders, setOrders] = useState([{
 
-interface Order {
-	orderno: string;
-	name: string;
-	item: string;
-	status: string;
-	time: string;
-}
+	// }])
+	const value = {
+		oven: [],
+		addToOven: function (order) {
+			this.oven.push(order);
+		},
+		removeFromOven: function () {},
+		countOrdersInOven: function () {
+			return this.oven.length;
+		},
+		processing: [],
+		updateProcessingQueue: function (cb) {
+			try {
+				return cb();
+			} catch (error) {
+				throw new Error(error);
+			}
+		},
 
-function Tables() {
-	const [orders, setOrders] = React.useState([]);
-	
-	React.useEffect(() => {
-		channel.bind('new-order', (order) => {
-			setOrders((orders) => [...orders, order]);});
-	}, []);
-	
-	const textColor = useColorModeValue('gray.700', 'white');
-
+		orders: [],
+		addOrder: function (order) {
+			this.orders.push(order);
+		},
+		waitList: [],
+		updateWaitlist: function (cb) {
+			try {
+				return cb();
+			} catch (error) {
+				throw new Error(error);
+			}
+		},
+	};
 	return (
-		<Flex direction='column' p='10' ml='10'>
-			{/* <Container> */}
-			<Card>
-				<CardHeader>
-					<Text fontSize='xl' color={textColor} fontWeight='bold' pb='50'>
-						<Center>CURRENT ORDERS</Center>
-					</Text>
-				</CardHeader>
-				<CardBody>
-					<Table variant='simple' color={textColor}>
-						<Thead>
-							<Tr my='.8rem' pl='0px' color='gray.400'>
-								<Th fontSize='20px' color='gray.400'>
-									Order no
-								</Th>
-								<Th fontSize='20px' pl='0px' color='gray.400'>
-									Name
-								</Th>
-								<Th fontSize='20px' color='gray.400'>
-									Status
-								</Th>
-								<Th fontSize='20px' color='gray.400'>
-									Ready In
-								</Th>
-								<Th></Th>
-							</Tr>
-						</Thead>
-						<Tbody>
-							{orders.map((row) => {
-								return (
-									<TablesOrderRow
-										orderno={row.orderno}
-										name={row.name}
-										status={row.status}
-									/>
-								);
-							})}
-						</Tbody>
-					</Table>
-				</CardBody>
-			</Card>
-			{/* </Container> */}
-		</Flex>
+		<OvenContext.Provider value={value} >
+			<OrderTable />
+		</OvenContext.Provider>
 	);
 }
 
-export default Tables;
+export default Home;

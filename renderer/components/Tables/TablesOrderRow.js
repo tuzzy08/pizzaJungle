@@ -1,23 +1,14 @@
-import {
-	Avatar,
-	Badge,
-	Button,
-	Flex,
-	Td,
-	Text,
-	Tr,
-	useColorModeValue,
-} from '@chakra-ui/react';
+import { Badge, Flex, Td, Text, Tr, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
 
 import CountdownTimer from '../CountdownTimer/CountdownTimer';
 
 function TablesOrderRow(props) {
-	const { orderno, name, status, time } = props;
+	const { orderno, name, status, time, orderID } = props;
 	const textColor = useColorModeValue('gray.700', 'white');
-	const bgStatus = useColorModeValue('yellow.400', '#1a202c');
+	// const bgStatus = useColorModeValue('yellow.400', '#1a202c');
 	const colorStatus = useColorModeValue('white', 'gray.400');
-	const statusColor = {};
+	// const statusColor = {};
 
 	return (
 		<Tr>
