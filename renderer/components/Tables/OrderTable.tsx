@@ -52,43 +52,24 @@ function Tables() {
 					value.addOrder(newOrder);
 					// Update state
 					setOrders((orders) => [...orders, newOrder]);
-					//
-					console.log('Orders in oven');
-					console.log(value.countOrdersInOven());
-					console.log('Orders in order list');
-					console.log(value.orders.length);
-					console.log(value.orders);
 				});
-			}
-
-			// if (value.countOrdersInOven() < 3) {
-			// 	// Add order to oven
-			// 	value.addToOven(newOrder);
-
-			// 	value.addOrder(newOrder);
-			// 	setOrders((orders) => [...orders, newOrder]);
-
-			// 	console.log('in channel callback, after computing');
-			// 	console.log(value.countOrdersInOven());
-
-			// 	console.log('in channel callback, after computing, length of orders');
-			// 	console.log(value.orders);
-			// 	console.log(value.orders.length);
-			// }
-			// console.log(value.oven)
-			// if (oven.length < 3) addToOven(newOrder);
-			// console.log('in oven');
-			// console.log(oven.length);
-			// pizzasInOven = pizzasInOven + 1;
-			// console.log(pizzasInOven);
-			// console.log(order);
-			// if (pizzasInOven > 3) {
-			// 	order.status = 'waiting';
-			// 	console.log(order);
-			// 	setOrders((orders) => [...orders, newOrder]);
-			// 	return;
-			// }
-			// setOrders((orders) => [...orders, newOrder]);
+			} else {
+				/**
+				 * Check if processing queue is full,
+				 * if it is add the new order to waiting list
+				 */
+				value.updateWaitlist(() => {
+					// update order status
+					newOrder.status = 'Waiting';
+					value.waitList.push(newOrder);
+					console.log('wait list');
+					console.log(value.waitList);
+					// Add to orders List
+					value.addOrder(newOrder);
+					// Update state
+					setOrders((orders) => [...orders, newOrder]);	
+				});
+			}	
 		});
   }, []);
   

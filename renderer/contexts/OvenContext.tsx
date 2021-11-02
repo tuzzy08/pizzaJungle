@@ -9,7 +9,7 @@ export type order = {
 
 interface OvenInterface {
 	oven: Array<object>;
-	addToOven: Function;
+	addToOven: (order: order) => {};
 	removeFromOven: Function;
 	countOrdersInOven: Function;
 	// setOven: Function;

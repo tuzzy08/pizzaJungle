@@ -46,7 +46,7 @@ function TablesOrderRow(props) {
 				</Badge>
 			</Td>
 			<Td>
-				<CountdownTimer />
+				<CountdownTimer orderID={orderID} />
 				{/* <Text fontSize='md' color={textColor} fontWeight='bold' pb='.5rem'>
 					{time}
 					mins
