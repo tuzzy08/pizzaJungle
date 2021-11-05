@@ -3,19 +3,16 @@ import React from 'react';
 
 import CountdownTimer from '../CountdownTimer/CountdownTimer';
 
-function TablesOrderRow(props) {
-	const { orderno, name, status, time, orderID } = props;
+function TablesOrderRow({ order }) {
 	const textColor = useColorModeValue('gray.700', 'white');
 	// const bgStatus = useColorModeValue('yellow.400', '#1a202c');
 	const colorStatus = useColorModeValue('white', 'gray.400');
-	// const statusColor = {};
-
 	return (
 		<Tr>
 			<Td>
 				<Flex direction='column'>
 					<Text fontSize='md' color='gray.400' fontWeight='normal'>
-						{orderno}
+						{order.orderno}
 					</Text>
 				</Flex>
 			</Td>
@@ -29,24 +26,24 @@ function TablesOrderRow(props) {
 						fontWeight='bold'
 						minWidth='100%'
 					>
-						{name}
+						{order.name}
 					</Text>
 				</Flex>
 				{/* </Flex> */}
 			</Td>
 			<Td>
 				<Badge
-					bg={status === 'In the Oven' ? 'green.400' : 'yellow.300'}
-					color={status === 'Online' ? 'white' : colorStatus}
+					bg={order.status === 'Ready' ? 'green.400' : 'yellow.300'}
+					color='white'
 					fontSize='16px'
 					p='3px 10px'
 					borderRadius='8px'
 				>
-					{status}
+					{order.status}
 				</Badge>
 			</Td>
 			<Td>
-				<CountdownTimer orderID={orderID} />
+				<CountdownTimer order={order} />
 				{/* <Text fontSize='md' color={textColor} fontWeight='bold' pb='.5rem'>
 					{time}
 					mins

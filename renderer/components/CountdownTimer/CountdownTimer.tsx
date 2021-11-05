@@ -3,8 +3,9 @@ import { Box, Text, useColorModeValue } from '@chakra-ui/react';
 import countdownUtil from '../../utils/countdownUtils';
 import useInterval from '../../utils/useInterval';
 import { OvenContext } from '../../contexts/OvenContext';
+import { ACTIONS } from '../../pages/home'
 
-function CountdownTimer({ orderID }) {
+function CountdownTimer({ order }) {
   const textColor = useColorModeValue('gray.700', 'white');
   const context = useContext(OvenContext);
   const [remainingTime, setremainingTime] = useState(120);
@@ -15,6 +16,10 @@ function CountdownTimer({ orderID }) {
     }
     // Processing time of 6 minutes has elapsed, order should be placed in oven
     // Getting current order
+
+    if (remainingTime === 70) {
+      context.dispatch({ type: ACTIONS.REMOVE_FROM_PROCESS, payload: order})
+    }
     // if (remainingTime === 70) {
     //   // let index = null;
     //   let order = null;

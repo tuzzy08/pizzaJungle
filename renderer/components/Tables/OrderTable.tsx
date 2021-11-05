@@ -100,14 +100,11 @@ function Tables({ appstate }) {
 							</Tr>
 						</Thead>
 						<Tbody>
-							{ context.state.orders.map((row) => {
+							{ context.state.orders.map((order) => {
 								return (
 									<TablesOrderRow
-										orderno={row.orderno}
-										orderID={row.orderID}
-										name={row.name}
-										status={row.status}
-										key={row.orderID}
+										order={order}
+										key={order.orderID}
 									/>
 								);
 							})}

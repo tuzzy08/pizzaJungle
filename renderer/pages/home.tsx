@@ -19,6 +19,8 @@ import { Order, OvenContext } from '../contexts/OvenContext';
 export enum ACTIONS {
 	ADD_TO_PROCESS = 'add-to-process',
 	REMOVE_FROM_PROCESS = 'remove from-process',
+	ADD_TO_OVEN = 'add-to-oven',
+	REMOVE_FROM_OVEN = 'remove from-oven',
 	ADD_TO_WAITLIST = 'add-to-waitlist',
 	REMOVE_FROM_WAITLIST = 'remove-from-waitlist',
 }
@@ -38,6 +40,20 @@ function Home() {
 				newState = { ...state };
 				newState.processing = [...state.processing, action.payload];
 				newState.orders = [...state.orders, action.payload];
+				return newState;
+			case ACTIONS.REMOVE_FROM_PROCESS:
+				newState = { ...state };
+				newState.processing = state.processing.filter(
+					(order) => order.orderID !== action.payload.orderID
+				);
+				// Add to oven
+				newState.oven.push(action.payload);
+				// Update orders 
+				newState.orders.find((order) => {
+					if (order.orderID === action.payload.orderID) {
+						order.status = 'In the oven'
+					}
+				})
 				return newState;
 			case ACTIONS.ADD_TO_WAITLIST:
 				newState = { ...state };
