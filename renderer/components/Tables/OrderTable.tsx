@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Pusher from 'pusher-js';
 // Chakra imports
@@ -19,22 +19,27 @@ import Card from '../Card/Card';
 import CardHeader from '../Card/CardHeader';
 import CardBody from '../Card/CardBody';
 import TablesOrderRow from '../Tables/TablesOrderRow';
-import { order, OvenContext } from '../../contexts/OvenContext';
+import { Order, OvenContext } from '../../contexts/OvenContext';
+import { ACTIONS } from '../../pages/home'
 
 const pusher = new Pusher('fb2d17544b3e7440c96f', {
 	cluster: 'eu',
 });
-
 const channel = pusher.subscribe('pizza-jungle');
 
+function Tables({ appstate }) {
+	const context = useContext(OvenContext);
+	let count = 0;
 
-
-function Tables() {
-	const value = useContext(OvenContext);
-	const [orders, setOrders] = React.useState(value.orders);
-	
 	React.useEffect(() => {
-		channel.bind('new-order', (order: order) => {
+		console.log('Orders')
+		console.log(context.state.orders.length)
+		console.log('processing');
+		console.log(context.state.processing.length);
+	})
+		
+	React.useEffect(() => {
+		channel.bind('new-order', async (order: Order) => {
 			// Add order ID to the order
 			const newOrder = { ...order, orderID: uuidv4() };
 			/**
@@ -42,34 +47,23 @@ function Tables() {
 			 * If it does add to it and update orders list
 			 * and status of the order
 			 */
-			if (value.processing.length < 3) {
-				value.updateProcessingQueue(() => {
-					// update order status
-					newOrder.status = 'In Process'
-					// Add to processing queue
-					value.processing.push(newOrder);
-					// Add to orders List
-					value.addOrder(newOrder);
-					// Update state
-					setOrders((orders) => [...orders, newOrder]);
-				});
+			if (count < 3) {
+				// update order status
+				newOrder.status = 'In Process';
+				// Add to processing queue
+				context.dispatch({ type: ACTIONS.ADD_TO_PROCESS, payload: newOrder });
+				count = count + 1;
 			} else {
 				/**
-				 * Check if processing queue is full,
-				 * if it is add the new order to waiting list
+				 * Processing queue is full,
+				 * add the new order to waiting list
 				 */
-				value.updateWaitlist(() => {
-					// update order status
-					newOrder.status = 'Waiting';
-					value.waitList.push(newOrder);
-					console.log('wait list');
-					console.log(value.waitList);
-					// Add to orders List
-					value.addOrder(newOrder);
-					// Update state
-					setOrders((orders) => [...orders, newOrder]);	
-				});
-			}	
+				// update order status
+				newOrder.status = 'Waiting';
+				// Add to waitList
+				context.dispatch({ type: ACTIONS.ADD_TO_WAITLIST, payload: newOrder });
+			}
+			console.log(count);
 		});
   }, []);
   
@@ -106,7 +100,7 @@ function Tables() {
 							</Tr>
 						</Thead>
 						<Tbody>
-							{ value.orders.map((row) => {
+							{ context.state.orders.map((row) => {
 								return (
 									<TablesOrderRow
 										orderno={row.orderno}

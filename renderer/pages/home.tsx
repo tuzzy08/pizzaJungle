@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import Pusher from 'pusher-js';
 // Chakra imports
 import {
@@ -14,47 +14,76 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import OrderTable from '../components/Tables/OrderTable'
-import { OvenContext } from '../contexts/OvenContext';
+import { Order, OvenContext } from '../contexts/OvenContext';
 
+export enum ACTIONS {
+	ADD_TO_PROCESS = 'add-to-process',
+	REMOVE_FROM_PROCESS = 'remove from-process',
+	ADD_TO_WAITLIST = 'add-to-waitlist',
+	REMOVE_FROM_WAITLIST = 'remove-from-waitlist',
+}
+
+interface State {
+	oven: Array<Order>;
+	processing: Array<Order>;
+	orders: Array<Order>;
+	waitlist: Array<Order>;
+}
 
 function Home() {
-	// const [orders, setOrders] = useState([{
+	function reducer(state: State, action) {
+		let newState;
+		switch (action.type) {
+			case ACTIONS.ADD_TO_PROCESS:
+				newState = { ...state };
+				newState.processing = [...state.processing, action.payload];
+				newState.orders = [...state.orders, action.payload];
+				return newState;
+			case ACTIONS.ADD_TO_WAITLIST:
+				newState = { ...state };
+				newState.waitlist = [...state.waitlist, action.payload];
+				newState.orders = [...state.orders, action.payload];
+				return newState;
+		}
+	}
 
-	// }])
-	const value = {
+	const initialState = {
 		oven: [],
-		addToOven: function (order) {
-			this.oven.push(order);
-		},
-		removeFromOven: function () {},
-		countOrdersInOven: function () {
-			return this.oven.length;
-		},
 		processing: [],
-		updateProcessingQueue: function (cb) {
-			try {
-				return cb();
-			} catch (error) {
-				throw new Error(error);
-			}
-		},
-
 		orders: [],
-		addOrder: function (order) {
-			this.orders.push(order);
-		},
-		waitList: [],
-		updateWaitlist: function (cb) {
-			try {
-				return cb();
-			} catch (error) {
-				throw new Error(error);
-			}
-		},
+		waitlist: [],
 	};
+
+	// const [appContext, setAppContext] = useState({
+	// 	oven: [],
+	// 	processing: [],
+	// 	orders: [],
+	// 	waitlist: []
+	// });
+
+	const [state, dispatch] = useReducer(reducer, initialState)
+	const value = {
+		state,
+		dispatch,
+	};
+
+	// const [oven, setOven] = useState([])
+	// const [processing, setProcessing] = useState([]);
+	// const [orders, setOrders] = useState([]);
+	// const [waitlist, setWaitlist] = useState([]);
+	// const value = {
+	// 	oven,
+	// 	setOven,
+	// 	processing,
+	// 	setProcessing,
+	// 	orders,
+	// 	setOrders,
+	// 	waitlist,
+	// 	setWaitlist,
+	// };
 	return (
 		<OvenContext.Provider value={value} >
-			<OrderTable />
+			<OrderTable appstate={ state } />
 		</OvenContext.Provider>
 	);
 }
