@@ -1,5 +1,9 @@
 import { app } from 'electron';
 import serve from 'electron-serve';
+import installExtension, {
+	REDUX_DEVTOOLS,
+	REACT_DEVELOPER_TOOLS,
+} from 'electron-devtools-installer';
 import { createWindow } from './helpers';
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
@@ -11,7 +15,14 @@ if (isProd) {
 }
 
 (async () => {
-  await app.whenReady();
+  await app.whenReady().then(() => {
+		installExtension(REDUX_DEVTOOLS)
+			.then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
+    installExtension(REACT_DEVELOPER_TOOLS)
+			.then((name) => console.log(`Added Extension:  ${name}`))
+			.catch((err) => console.log('An error occurred: ', err));
+	});
 
   const mainWindow = createWindow('main', {
     width: 1000,

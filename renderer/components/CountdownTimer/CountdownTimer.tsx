@@ -5,12 +5,21 @@ import useInterval from '../../utils/useInterval';
 import { OvenContext } from '../../contexts/OvenContext';
 import { ACTIONS } from '../../pages/home'
 
+// function useUpdate(action) {
+//   const context = useContext(OvenContext);
+//   React.useEffect(() => {
+//     context.dispatch(action)
+//   });
+// }
+
 function CountdownTimer({ order }) {
   const textColor = useColorModeValue('gray.700', 'white');
   const context = useContext(OvenContext);
   const [remainingTime, setremainingTime] = useState(120);
 
-	useInterval(() => {
+  
+
+	useInterval(async () => {
 		if (remainingTime > 0) {
 			setremainingTime(remainingTime - 1);
     }
@@ -18,9 +27,10 @@ function CountdownTimer({ order }) {
     // Getting current order
 
     if (remainingTime === 70) {
-      context.dispatch({ type: ACTIONS.REMOVE_FROM_PROCESS, payload: order})
+      // useUpdate({ type: ACTIONS.REMOVE_FROM_PROCESS, payload: order });
+      await context.dispatch({ type: ACTIONS.REMOVE_FROM_PROCESS, payload: order})
     }
-    // if (remainingTime === 70) {
+      // if (remainingTime === 70) {
     //   // let index = null;
     //   let order = null;
 		// 	// ? Step 1: Remove the order from processing Queue

@@ -14,61 +14,35 @@ import {
 	Tr,
 	useColorModeValue,
 } from '@chakra-ui/react';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 // Custom components
 import Card from '../Card/Card';
 import CardHeader from '../Card/CardHeader';
 import CardBody from '../Card/CardBody';
-import TablesOrderRow from '../Tables/TablesOrderRow';
+import TablesOrderRow from './TablesOrderRow';
 import { Order, OvenContext } from '../../contexts/OvenContext';
-import { ACTIONS } from '../../pages/home'
+import { addToProcess } from '../../store/slices';
+import store from '../../store'
 
-const pusher = new Pusher('fb2d17544b3e7440c96f', {
-	cluster: 'eu',
-});
-const channel = pusher.subscribe('pizza-jungle');
-
-function Tables({ appstate }) {
-	const context = useContext(OvenContext);
-	let count = 0;
+function Tables() {
+	const state = useAppSelector((state) => state);
+	const dispatch = useAppDispatch();
 
 	React.useEffect(() => {
-		console.log('Orders')
-		console.log(context.state.orders.length)
-		console.log('processing');
-		console.log(context.state.processing.length);
-	})
-		
-	React.useEffect(() => {
-		channel.bind('new-order', async (order: Order) => {
-			// Add order ID to the order
-			const newOrder = { ...order, orderID: uuidv4() };
-			/**
-			 * Check if processing queue has space,
-			 * If it does add to it and update orders list
-			 * and status of the order
-			 */
-			if (count < 3) {
-				// update order status
-				newOrder.status = 'In Process';
-				// Add to processing queue
-				context.dispatch({ type: ACTIONS.ADD_TO_PROCESS, payload: newOrder });
-				count = count + 1;
-			} else {
-				/**
-				 * Processing queue is full,
-				 * add the new order to waiting list
-				 */
-				// update order status
-				newOrder.status = 'Waiting';
-				// Add to waitList
-				context.dispatch({ type: ACTIONS.ADD_TO_WAITLIST, payload: newOrder });
-			}
-			console.log(count);
+		const pusher = new Pusher('fb2d17544b3e7440c96f', {
+			cluster: 'eu',
 		});
-  }, []);
-  
-  
-
+		const pusherChannel = pusher.subscribe('pizza-jungle');
+		
+		pusherChannel.bind('new-order', (order: Order) => {
+			const newOrder = { ...order, orderID: uuidv4() };
+			newOrder.status = 'In Process';
+			dispatch(addToProcess(newOrder));
+		});		
+	}, []);
+	
+	console.log('state in component')
+	console.log(state)
 	const textColor = useColorModeValue('gray.700', 'white');
 
 	return (
@@ -100,13 +74,8 @@ function Tables({ appstate }) {
 							</Tr>
 						</Thead>
 						<Tbody>
-							{ context.state.orders.map((order) => {
-								return (
-									<TablesOrderRow
-										order={order}
-										key={order.orderID}
-									/>
-								);
+							{state.orders.map((order) => {
+								return <TablesOrderRow order={order} key={order.orderID} />;
 							})}
 						</Tbody>
 					</Table>
