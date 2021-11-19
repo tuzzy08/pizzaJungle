@@ -5,7 +5,6 @@ import Pusher from 'pusher-js';
 import {
 	Flex,
 	Center,
-	Box,
 	Table,
 	Tbody,
 	Text,
@@ -22,7 +21,7 @@ import CardBody from '../Card/CardBody';
 import TablesOrderRow from './TablesOrderRow';
 import { Order, OvenContext } from '../../contexts/OvenContext';
 import { addToProcess } from '../../store/slices';
-import store from '../../store'
+import CountdownTimer from '../CountdownTimer/CountdownTimer';
 
 function Tables() {
 	const state = useAppSelector((state) => state);
@@ -36,13 +35,9 @@ function Tables() {
 		
 		pusherChannel.bind('new-order', (order: Order) => {
 			const newOrder = { ...order, orderID: uuidv4() };
-			newOrder.status = 'In Process';
 			dispatch(addToProcess(newOrder));
 		});		
 	}, []);
-	
-	console.log('state in component')
-	console.log(state)
 	const textColor = useColorModeValue('gray.700', 'white');
 
 	return (
@@ -75,7 +70,11 @@ function Tables() {
 						</Thead>
 						<Tbody>
 							{state.orders.map((order) => {
-								return <TablesOrderRow order={order} key={order.orderID} />;
+								return (
+									<>
+										{order.status != null ? <TablesOrderRow order={order}	key={order.orderID}	timer={CountdownTimer} /> : null}
+									</>
+								);
 							})}
 						</Tbody>
 					</Table>

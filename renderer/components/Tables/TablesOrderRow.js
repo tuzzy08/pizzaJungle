@@ -3,7 +3,13 @@ import React from 'react';
 
 import CountdownTimer from '../CountdownTimer/CountdownTimer';
 
-function TablesOrderRow({ order }) {
+function TablesOrderRow({ order, timer }) {
+	const orderStatusColor = {
+		'In process': 'blue.400',
+		'In the oven': 'green.100',
+		Ready: 'green.400',
+		Waiting: 'pink.400',
+	};
 	const textColor = useColorModeValue('gray.700', 'white');
 	// const bgStatus = useColorModeValue('yellow.400', '#1a202c');
 	const colorStatus = useColorModeValue('white', 'gray.400');
@@ -33,7 +39,7 @@ function TablesOrderRow({ order }) {
 			</Td>
 			<Td>
 				<Badge
-					bg={order.status === 'Ready' ? 'green.400' : 'yellow.300'}
+					bg={orderStatusColor[order.status]}
 					color='white'
 					fontSize='16px'
 					p='3px 10px'
@@ -43,7 +49,8 @@ function TablesOrderRow({ order }) {
 				</Badge>
 			</Td>
 			<Td>
-				<CountdownTimer order={order} />
+				{order.status !== 'Waiting' ? <CountdownTimer order={order} /> : null}
+
 				{/* <Text fontSize='md' color={textColor} fontWeight='bold' pb='.5rem'>
 					{time}
 					mins

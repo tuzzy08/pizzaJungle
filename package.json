@@ -15,7 +15,6 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@reduxjs/toolkit": "^1.6.2",
-    "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.0.1",

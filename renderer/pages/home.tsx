@@ -13,29 +13,11 @@ import {
 	Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
-import OrderTable from '../components/Tables/OrderTable'
-import { Order, OvenContext } from '../contexts/OvenContext';
+import OrderTable from '../components/Tables/OrderTable';
 
 function Home() {
-
-	// const [oven, setOven] = useState([])
-	// const [processing, setProcessing] = useState([]);
-	// const [orders, setOrders] = useState([]);
-	// const [waitlist, setWaitlist] = useState([]);
-	// const value = {
-	// 	oven,
-	// 	setOven,
-	// 	processing,
-	// 	setProcessing,
-	// 	orders,
-	// 	setOrders,
-	// 	waitlist,
-	// 	setWaitlist,
-	// };
 	return (
-		// <OvenContext.Provider value={value} >
-			<OrderTable />
-		// </OvenContext.Provider>
+		<OrderTable />
 	);
 }
 
